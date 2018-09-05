@@ -1,0 +1,187 @@
+#:kivy 1.10.1
+
+#:set color_white (1, 1, 1, 1)
+#:set color_black (0, 0, 0, 1)
+#:set color_red (1, 0, .1, 1)
+#:set color_green (0, 1, .1, 1)
+#:set color_cyan_bright (.42, .81, .92, 1)
+#:set color_cyan_dark (.27, .49, .57, 1)
+#:set color_orange_bright (.93, .53, .16, 1)
+#:set color_orange_dark (.63,.32, 0, 1)
+#:set default_padding sp(15)
+#:set panel_bg_color (1, 1, 1, .3)
+#:set title_size dp(30)
+
+<TextInput>:
+    write_tab: False
+    multiline: False
+
+<Label>:
+    font_name: 'malgunsl'
+    font_size: dp(25)
+
+<Button>:
+    background_normal: ''
+    background_down: ''
+    background_color: color_cyan_bright if self.state is 'down' else color_cyan_dark
+    opacity: .5 if self.disabled else 1
+    color: color_orange_dark if self.state is 'down' else color_orange_bright
+
+<MenuButton@Button>:
+    font_size: dp(25)
+
+<GameScreen>:
+
+
+<PlayerDisplay>:
+    color_selected: panel_bg_color
+    color_normal: panel_bg_color
+
+    BoxLayout:
+        orientation: 'horizontal'
+
+        RelativeLayout:
+            Label:
+                text: root.data.nickname
+        RelativeLayout:
+            Label:
+                text: root.data.ping
+            
+
+<RoomScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: (.8, .9)
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        padding: default_padding
+        spacing: default_padding
+        
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'images/room_screen_bg.png'
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: .25
+
+            canvas.before:
+                Color:
+                    rgba: panel_bg_color
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            Label:
+                text: root.room_name
+                font_size: title_size
+
+        RelativeLayout:
+            ScrollView:
+                SelectionBox:
+                    id: sb_players
+                    model: 'PlayerDisplay'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .25
+            spacing: sp(50)
+
+            Button:
+                text: 'Quit'
+                on_release: root.quit_room()
+                
+            Button:
+                id: btn_ready
+                on_release: root.ready()
+
+
+<MainMenuScreen>:
+    nickname: nickname.text
+    room_code: room_code.text
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: (.5, .8)
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        padding: default_padding
+        
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'images/main_menu_bg.png'
+
+        RelativeLayout:
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint: (.7,.7)
+                pos_hint: {'center_x': .5, 'center_y': .5}
+
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    TextInput:
+                        id: nickname
+                        hint_text: 'NICKNAME'
+                    
+                    Label:
+                        text: root.nickname_error
+                        opacity: 0 if self.text == '' else 1
+                        color: color_red
+
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    TextInput:
+                        id: room_code
+                        hint_text: 'ROOM ID'
+
+                    Label:
+                        id: room_code_msg
+                        state: ''
+                        text: 'Connecting...' if self.state == 'connecting' else ''
+                        color: color_green if self.state == 'connecting' else color_red
+                        opacity: 1 if self.state == 'connecting' or self.state == 'error' else 0
+        
+        BoxLayout:
+            orientation: 'vertical'
+
+            MenuButton:
+                text: 'JOIN ROOM'
+                on_release: root.join_room()
+
+            RelativeLayout:
+                size_hint_y: .5
+
+                Label:
+                    text: 'OR'
+            
+            MenuButton:
+                text: 'CREATE ROOM'
+                on_release: root.host()
+
+
+<ScreenManager>:
+    main_menu_screen: main_menu_screen
+    room_screen: room_screen
+    game_screen: game_screen
+    
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'images/background.png'
+
+    MainMenuScreen:
+        id: main_menu_screen
+        name: 'main_menu_screen'
+
+    RoomScreen:
+        id: room_screen
+        name: 'room_screen'
+
+    GameScreen:
+        id: game_screen
+        name: 'game_screen'

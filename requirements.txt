@@ -1,0 +1,8 @@
+slumber==0.7.1
+scipy==1.0.1
+numpy==1.14.2
+kivy.deps.sdl2==0.1.17
+Django==2.1
+protobuf==3.6.1
+kivy==1.10.1
+djangorestframework==3.8.2

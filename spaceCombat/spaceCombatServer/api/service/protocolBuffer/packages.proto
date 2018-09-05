@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+
+message Package{
+    bytes hash = 1;
+    int32 type = 2;
+    bytes data = 3;
+}
+
+
+message Command{
+    int32 code = 1;
+}
+
+
+message Action{
+    int32 code = 1;
+    int32 ad_code = 2;
+}
+
+message Discard{
+    int32 id = 1;
+}
+
+message Ship{
+    int32 id = 1;
+    float player_id = 2;
+    float x = 3;
+    float y = 4;
+    float angle = 5;
+    int32 thruttle = 6;
+    int32 reverse_thruttle = 7;
+    float life = 8;
+}
+
+
+message Projectile{
+    int32 id = 1;
+    float x = 2;
+    float y = 3;
+    float angle = 4;
+}
